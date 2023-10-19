@@ -30,6 +30,19 @@ async function run() {
       .db("brandShopDB")
       .collection("productCollection");
 
+    app.get("/products", async (req, res) => {
+      const cursor = productCollection.find({});
+      const products = await cursor.toArray();
+      res.send(products);
+    });
+
+    app.get("/brands/:brand", async (req, res) => {
+      const brandName = req.params.brand;
+      const cursor = productCollection.find({ brandName: brandName });
+      const products = await cursor.toArray();
+      res.send(products);
+    });
+
     app.post("/products", async (req, res) => {
       const newProduct = req.body;
       console.log(newProduct);
