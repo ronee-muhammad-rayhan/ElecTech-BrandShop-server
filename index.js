@@ -29,6 +29,9 @@ async function run() {
     const productCollection = client
       .db("brandShopDB")
       .collection("productCollection");
+    const cartProductCollection = client
+      .db("brandShopDB")
+      .collection("cartProductCollection");
 
     app.get("/products", async (req, res) => {
       const cursor = productCollection.find({});
@@ -58,6 +61,24 @@ async function run() {
       const result = await productCollection.insertOne(newProduct);
       console.log(
         `A product is added with the _id:${result.insertedId}`,
+        result
+      );
+      res.send(result);
+    });
+
+    app.get("/cart-products", async (req, res) => {
+      const cursor = cartProductCollection.find({});
+      const products = await cursor.toArray();
+      res.status(200).send(products);
+    });
+
+    app.post("/cart-products", async (req, res) => {
+      const newProductId = req.body;
+      console.log(newProductId);
+
+      const result = await cartProductCollection.insertOne(newProductId);
+      console.log(
+        `A product is added in the cart-database-collection with the _id:${result.insertedId}`,
         result
       );
       res.send(result);
