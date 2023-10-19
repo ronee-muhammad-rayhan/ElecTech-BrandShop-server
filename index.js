@@ -84,6 +84,37 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedProductClient = req.body;
+      const updatedProduct = {
+        $set: {
+          name: updatedProductClient.name,
+          brandName: updatedProductClient.brandName,
+          type: updatedProductClient.type,
+          price: updatedProductClient.price,
+          shortDescription: updatedProductClient.shortDescription,
+          rating: updatedProductClient.rating,
+          image: updatedProductClient.image,
+        },
+      };
+
+      // Update the first document that matches the filter
+      const result = await productCollection.updateOne(
+        filter,
+        updatedProduct,
+        options
+      );
+
+      res.send(result);
+      // Print the number of matching and modified documents
+      console.log(
+        `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`
+      );
+    });
+
     app.delete("/cart-products/:id", async (req, res) => {
       const id = req.params.id;
       const doc = {
