@@ -37,10 +37,18 @@ async function run() {
     });
 
     app.get("/brands/:brand", async (req, res) => {
-      const brandName = req.params.brand;
+      const brandName = req.params.brand.toLowerCase();
       const cursor = productCollection.find({ brandName: brandName });
       const products = await cursor.toArray();
       res.send(products);
+    });
+
+    app.get("/product-details/:id", async (req, res) => {
+      const id = req.params.id;
+      const product = await productCollection.findOne({
+        _id: new ObjectId(id),
+      });
+      res.send(product);
     });
 
     app.post("/products", async (req, res) => {
