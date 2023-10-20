@@ -25,7 +25,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     const productCollection = client
       .db("brandShopDB")
       .collection("productCollection");
@@ -100,6 +100,8 @@ async function run() {
           image: updatedProductClient.image,
         },
       };
+
+      //   todo: patch here
 
       // Update the first document that matches the filter
       const result = await productCollection.updateOne(
